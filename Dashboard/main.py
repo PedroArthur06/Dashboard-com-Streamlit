@@ -19,7 +19,7 @@ st.write("""
 O gráfico abaixa representa a evolução do preço das ações ao longo dos anos.
 """)
 
-
+# Filtragem das ações
 lista_acoes= st.multiselect("Escolha as ações para visualizar",dados.columns)
 if lista_acoes:
     dados= dados[lista_acoes]
