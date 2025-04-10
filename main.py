@@ -3,14 +3,16 @@ import pandas as pd
 import yfinance as yf
 
 @st.cache_data
-def carregarDados(empresa):
-    # Carregar os dados históricos da ação
-    dados = yf.Ticker(empresa)
+def carregarDados(empresas):
+    texto_tickers = " ".join(empresas)
+    dados = yf.Tickers(texto_tickers)
     cotacao_acao = dados.history(period="1d", start="2010-01-01", end="2023-10-01")
-    cotacao_acao = cotacao_acao[["Close"]]
+    print(cotacao_acao)
+    cotacao_acao = cotacao_acao["Close"]
     return  cotacao_acao
 
-dados=carregarDados("ITUB4.SA")
+acoes= ["ITUB4.SA", "BBDC3.SA","PETR3.SA", "VALE3.SA", "ITSA4.SA"]
+dados=carregarDados(acoes)
 
 st.write(""" 
 # App preço de ações
