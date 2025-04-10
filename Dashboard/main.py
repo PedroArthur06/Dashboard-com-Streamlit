@@ -11,7 +11,14 @@ def carregarDados(empresas):
     cotacao_acao = cotacao_acao["Close"]
     return  cotacao_acao
 
-acoes= ["ITUB4.SA", "BBDC3.SA","PETR3.SA", "VALE3.SA", "ITSA4.SA", "ABEV3.SA", "MGLU3.SA"]
+@st.cache_data
+def carregar_acoes():
+    base_tickers = pd.read_csv("IBOV.csv", sep=";")
+    tickers = list(base_tickers["Código"])
+    tickers = [item + ".SA" for item in tickers]
+    return tickers
+
+acoes = carregar_acoes()
 dados=carregarDados(acoes)
 
 st.write(""" 
@@ -40,3 +47,21 @@ dados = dados.loc[intervalo_datas[0]: intervalo_datas[1]]
 
 
 st.line_chart(dados)
+
+texto_perf= ""
+
+if len (lista_acoes) == 0:
+    lista_acoes = list(dados.columns)
+
+for acao in lista_acoes:
+    performance_ativo = dados[acao].iloc[-1] / dados[acao].iloc[0] - 1
+    performance_ativo = float(performance_ativo)
+    texto_perf = texto_perf + f" \n{acao}: {performance_ativo:.1%} \n"
+
+
+st.write(f""" 
+### Performace dos ativos
+Essa foi a performace de cada ativo no período selecionado:
+         
+{texto_perf}
+""")
